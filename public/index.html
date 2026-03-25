@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Williamson Family UK Trip — Apr 14–20, 2026</title>
+
+<!-- PWA Meta Tags -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0f1117">
+<meta name="description" content="Williamson Family UK Itinerary — April 14–20, 2026">
+
+<!-- Apple PWA (Add to Home Screen) -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UK Trip">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-hover: #22262f;
+  --accent: #e8a838;
+  --accent2: #d4614b;
+  --accent3: #4a9ead;
+  --text: #e8e6e1;
+  --text-dim: #8a8780;
+  --border: #2a2d37;
+  --green: #5ab87a;
+  --purple: #9b7ed8;
+  --pink: #d87ea9;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+@media all and (display-mode: standalone) {
+  body { padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+  .day-nav { top: env(safe-area-inset-top); }
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.header {
+  text-align: center;
+  padding: 48px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(232,168,56,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: -0.5px;
+  color: var(--text);
+  position: relative;
+}
+
+.header h1 span { color: var(--accent); }
+
+.header .subtitle {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.header .trip-meta {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.header .trip-meta .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.chip .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Day Navigation */
+.day-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.day-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-dim);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.day-btn:hover { background: var(--card-hover); color: var(--text); }
+
+.day-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.day-btn .day-label { display: block; font-size: 10px; font-weight: 400; opacity: 0.7; }
+
+/* Main Content */
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+.day-section { display: none; }
+.day-section.active { display: block; }
+
+.day-header {
+  margin-bottom: 24px;
+}
+
+.day-header .day-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.day-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1.2;
+}
+
+.day-header .day-summary {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+
+/* Map Container */
+.map-container {
+  width: 100%;
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: 1px solid var(--border);
+  position: relative;
+  background: linear-gradient(135deg, #1a2d1a 0%, #1a1d27 40%, #1a2d3a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.85) contrast(1.05);
+}
+
+.map-overlay {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+.map-overlay a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(26,29,39,0.95);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.map-overlay a:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Google Maps Link Banner */
+.gmaps-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #1a3a2e 0%, #1a2d3a 100%);
+  border: 1px solid #2a4a3e;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.2s;
+}
+.gmaps-banner:hover { border-color: var(--green); }
+.gmaps-banner .icon { font-size: 24px; }
+.gmaps-banner .label { font-size: 13px; font-weight: 600; }
+.gmaps-banner .sublabel { font-size: 11px; color: var(--text-dim); }
+
+/* Timeline */
+.timeline { position: relative; }
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 23px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.stop {
+  position: relative;
+  padding-left: 56px;
+  margin-bottom: 28px;
+  animation: fadeIn 0.4s ease both;
+}
+
+.stop:last-child { margin-bottom: 0; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stop .time-badge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.stop .time-badge .t-hr {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+}
+
+.stop .time-badge .t-ampm {
+  font-size: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.stop.highlight .time-badge { border-color: var(--accent); }
+.stop.transport .time-badge { border-color: var(--accent3); }
+.stop.food .time-badge { border-color: var(--accent2); }
+.stop.activity .time-badge { border-color: var(--green); }
+.stop.rest .time-badge { border-color: var(--purple); }
+
+.stop-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.stop-card:hover {
+  background: var(--card-hover);
+  border-color: #3a3d47;
+}
+
+.stop-card .stop-type {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.stop.highlight .stop-type { color: var(--accent); }
+.stop.transport .stop-type { color: var(--accent3); }
+.stop.food .stop-type { color: var(--accent2); }
+.stop.activity .stop-type { color: var(--green); }
+.stop.rest .stop-type { color: var(--purple); }
+
+.stop-card h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.stop-card .address {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.stop-card .desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #b8b5ae;
+}
+
+.stop-card .tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.stop-card .tag {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(232,168,56,0.1);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.stop-card .tag.free {
+  background: rgba(90,184,122,0.1);
+  color: var(--green);
+}
+
+.stop-card .tag.book {
+  background: rgba(216,97,75,0.15);
+  color: var(--accent2);
+}
+
+.stop-card .tag.tip {
+  background: rgba(155,126,216,0.1);
+  color: var(--purple);
+}
+
+/* Connector */
+.connector {
+  padding-left: 56px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.connector-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(74,158,173,0.08);
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--accent3);
+  font-weight: 500;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+/* Booking Card */
+.booking-card {
+  background: linear-gradient(135deg, #2a1d10 0%, #1a1d27 60%);
+  border: 1px solid rgba(232,168,56,0.2);
+  border-radius: 12px;
+  padding: 18px;
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.booking-card h4 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.booking-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.booking-card li {
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.booking-card li:last-child { border-bottom: 0; }
+
+.booking-card .status {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.status.booked { background: rgba(90,184,122,0.15); color: var(--green); }
+.status.todo { background: rgba(216,97,75,0.15); color: var(--accent2); }
+
+.booking-card a.view-booking {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  padding: 2px 8px; border-radius: 4px; text-decoration: none;
+  background: rgba(74,158,173,0.15); color: var(--accent3);
+  transition: all 0.2s;
+}
+.booking-card a.view-booking:hover { background: rgba(74,158,173,0.3); }
+
+@media (max-width: 600px) {
+  .day-nav { gap: 4px; padding: 12px 8px; }
+  .day-btn { padding: 6px 10px; font-size: 11px; }
+  .map-container { height: 300px; }
+  .stop { padding-left: 48px; }
+  .timeline::before { left: 19px; }
+  .stop .time-badge { width: 40px; height: 40px; }
+  .stop .time-badge .t-hr { font-size: 12px; }
+  .connector { padding-left: 48px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>The Williamson <span>UK Adventure</span></h1>
+  <div class="subtitle">April 14 – 20, 2026</div>
+  <div class="trip-meta">
+    <span class="chip"><span class="dot" style="background:var(--accent3)"></span> LHR → MAN</span>
+    <span class="chip"><span class="dot" style="background:var(--accent)"></span> 7 Days</span>
+    <span class="chip"><span class="dot" style="background:var(--green)"></span> 2 Adults + 2 Kids</span>
+    <span class="chip"><span class="dot" style="background:var(--accent2)"></span> London → Manchester</span>
+  </div>
+</div>
+
+<div class="day-nav" id="dayNav">
+  <button class="day-btn active" onclick="showDay(1)">Day 1<span class="day-label">Apr 14 · Tue</span></button>
+  <button class="day-btn" onclick="showDay(2)">Day 2<span class="day-label">Apr 15 · Wed</span></button>
+  <button class="day-btn" onclick="showDay(3)">Day 3<span class="day-label">Apr 16 · Thu</span></button>
+  <button class="day-btn" onclick="showDay(4)">Day 4<span class="day-label">Apr 17 · Fri</span></button>
+  <button class="day-btn" onclick="showDay(5)">Day 5<span class="day-label">Apr 18 · Sat</span></button>
+  <button class="day-btn" onclick="showDay(6)">Day 6<span class="day-label">Apr 19 · Sun</span></button>
+  <button class="day-btn" onclick="showDay(7)">Day 7<span class="day-label">Apr 20 · Mon</span></button>
+</div>
+
+<div class="main">
+
+<!-- ========== DAY 1 ========== -->
+<div class="day-section active" id="day1">
+  <div class="day-header">
+    <div class="day-tag">✈️ Day 1 — Tuesday, April 14</div>
+    <h2>Arrival in London</h2>
+    <div class="day-summary">Land at Heathrow, Heathrow Express to Paddington, settle into your South Kensington Airbnb, then a cozy British gastropub dinner at The Abingdon.</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d79599.0!2d-0.3!3d51.49!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x4876721ff0e46215%3A0xe597f5421342e764!2sHeathrow+Airport!3m2!1d51.4700223!2d-0.4542955!4m5!1s0x48760fbc0f840891%3A0x554d0c65de151f5f!2sThe+Abingdon%2C+54+Abingdon+Rd%2C+London+W8+6AP!3m2!1d51.4975667!2d-0.1961483!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Heathrow+Airport,+Hounslow/Paddington+Station,+London/Emperor's+Gate,+South+Kensington,+London+SW7/The+Abingdon,+54+Abingdon+Rd,+London+W8+6AP" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Heathrow+Airport,+Hounslow/Paddington+Station,+London/Emperor's+Gate,+South+Kensington,+London+SW7/The+Abingdon,+54+Abingdon+Rd,+London+W8+6AP" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 1 Route in Google Maps</div>
+      <div class="sublabel">LHR → Paddington → South Ken Airbnb → The Abingdon</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop transport" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">3:35</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">✈️ Arrival</div>
+        <h3>Land at Heathrow Airport (LHR)</h3>
+        <div class="address">Hounslow, London TW6 — Terminal info on boarding pass</div>
+        <div class="desc">Avianca flight from Bogotá lands at 3:35 PM. Allow 45–60 min for immigration, baggage, and customs with the kids. Booking ref: BF28WL.</div>
+        <div class="tags"><span class="tag">Avianca BF28WL</span><span class="tag tip">UK e-gates may work for US passports</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚆 Heathrow Express · 15 min · Tap contactless at barriers · £26/adult, kids free</div></div>
+
+    <div class="stop transport" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">4:45</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🚆 Transit</div>
+        <h3>Paddington Station</h3>
+        <div class="address">Praed St, London W2 1HU</div>
+        <div class="desc">Arrive Paddington. Transfer to Circle or District Line (1 stop to Gloucester Road) or grab an Uber (~10 min to the Airbnb). With tired kids, Uber is easier.</div>
+        <div class="tags"><span class="tag">Circle/District Line</span><span class="tag tip">Uber ~£8–12</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Tube 1 stop or 🚗 Uber · 10–15 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">5:15</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🏠 Accommodation</div>
+        <h3>South Kensington Airbnb — Check In</h3>
+        <div class="address">Emperor's Gate, London SW7 4HJ</div>
+        <div class="desc">Luxurious 2BR oasis with A/C, crib, high chair, 2 full bathrooms. Check-in after 4 PM. Quick freshen up, get the kids settled, then head to dinner.</div>
+        <div class="tags"><span class="tag">Confirmation: HMPX54CPDX</span><span class="tag tip">Quiet hours 9PM–8AM</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 8 min south on Abingdon Road</div></div>
+
+    <div class="stop food" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">5:45</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Dinner</div>
+        <h3>The Abingdon</h3>
+        <div class="address">54 Abingdon Rd, London W8 6AP · ☎ +44 20 7937 3339</div>
+        <div class="desc">Cozy British gastropub — comfort food perfect after a long flight. Known for incredible sticky toffee pudding, hearty pies, and a great wine list. Highchairs available. Rating: 4.5★ (629 reviews).</div>
+        <div class="tags">
+          <span class="tag book">⚠️ Reserve for 5:45 PM</span>
+          <span class="tag">British gastropub</span>
+          <span class="tag">$$</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 8 min back to Airbnb</div></div>
+
+    <div class="stop rest" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">7:15</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Wind Down</div>
+        <h3>Back to Airbnb — Kids Bedtime</h3>
+        <div class="address">Emperor's Gate, London SW7 4HJ</div>
+        <div class="desc">Bath time and bed for the little ones. You'll be jetlagged — get some sleep! Big day tomorrow with the Changing of the Guard.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 1 Booking Status</h4>
+    <ul>
+      <li>Avianca Flight BF28WL (MCO→BOG→LHR) <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19a6f961b78e3d43" target="_blank">📄 View</a> <span class="status booked">✓ Booked</span></li>
+      <li>Heathrow Express (tap contactless) <span class="status booked">✓ No booking needed</span></li>
+      <li>South Kensington Airbnb <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19d1d52c3b77a2cb" target="_blank">📄 View</a> <span class="status booked">✓ Booked</span></li>
+      <li>The Abingdon — dinner 5:45 PM <span class="status todo">Book Now</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 2 ========== -->
+<div class="day-section" id="day2">
+  <div class="day-header">
+    <div class="day-tag">👑 Day 2 — Wednesday, April 15</div>
+    <h2>Changing of the Guard & South Bank</h2>
+    <div class="day-summary">The big sightseeing day — Buckingham Palace ceremony, Big Ben, double-decker bus ride, Borough Market lunch, London Eye, and dinner at Bala Baya.</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m46!1m12!1m3!1d19870.0!2d-0.12!3d51.50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m31!3e2!4m5!1s0x48760520074c0b15%3A0xa26abf514d902a7!2sBuckingham+Palace!3m2!1d51.501364!2d-0.14189!4m5!1s0x487604c38c8cd1d9%3A0xb7928f5439b1d8d9!2sBig+Ben!3m2!1d51.5007292!2d-0.1246254!4m5!1s0x487604d7755e070f%3A0x317024b5f4a8b631!2sBorough+Market!3m2!1d51.5055826!2d-0.0904808!4m5!1s0x487604b0a992fde7%3A0x4291dd60ee78d2e1!2sLondon+Eye!3m2!1d51.5031864!2d-0.1195192!4m5!1s0x487604a5f0000001%3A0x8d025a4540ed5a43!2sBala+Baya+Restaurant!3m2!1d51.5032699!2d-0.1018623!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Buckingham+Palace,+London/Big+Ben,+London/Borough+Market,+London/London+Eye/Bala+Baya+Restaurant,+229+Union+St,+London+SE1+0LR" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Buckingham+Palace,+London/Big+Ben,+London/Borough+Market,+London/London+Eye/Bala+Baya+Restaurant,+229+Union+St,+London+SE1+0LR" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 2 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → Buckingham Palace → Big Ben → Borough Market → London Eye → Bala Baya</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop rest" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">8:30</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">☕ Morning</div>
+        <h3>Breakfast at the Airbnb</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Full kitchen available — grab some croissants and milk from the Tesco Express on Gloucester Road the night before. Feed the kids, prep the stroller, pack snacks.</div>
+        <div class="tags"><span class="tag tip">Tesco Express on Gloucester Rd · 3 min walk</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 District/Piccadilly Line · Gloucester Rd → Green Park · 12 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">9:45</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">👑 Must-Do</div>
+        <h3>Buckingham Palace — Changing of the Guard</h3>
+        <div class="address">London SW1A 1AA · Nearest Tube: Green Park</div>
+        <div class="desc">Arrive by 9:45–10:00 AM for a good spot. The New Guard departs Wellington Barracks at 10:57 AM with the band. Ceremony begins 11:00 AM on the forecourt. Victoria Memorial steps give the best elevated view with stroller space.</div>
+        <div class="tags">
+          <span class="tag free">Free · No booking</span>
+          <span class="tag tip">Victoria Memorial = best family viewing</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk through St. James's Park · 15 min · Pelicans, ducks, gorgeous views</div></div>
+
+    <div class="stop activity" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">11:45</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">📸 Sightseeing</div>
+        <h3>Big Ben & Houses of Parliament</h3>
+        <div class="address">London SW1A 0AA · Westminster Bridge</div>
+        <div class="desc">Walk across Westminster Bridge for the classic photo with Big Ben. Let the kids watch the river boats. This is THE London photo spot.</div>
+        <div class="tags"><span class="tag free">Free</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚌 Double-decker bus! Route 12 or RV1 along the South Bank · Tap contactless · ~15 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.35s">
+      <div class="time-badge"><span class="t-hr">12:15</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🚌 Must-Do</div>
+        <h3>Double-Decker Bus Ride!</h3>
+        <div class="address">Westminster Bridge → South Bank</div>
+        <div class="desc">Hop on a Route 12 or RV1 from Westminster. Sit up top for amazing Thames views! Kids will love it. Just tap contactless — kids under 5 free.</div>
+        <div class="tags"><span class="tag">Contactless tap</span><span class="tag tip">Sit upstairs front row!</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk or bus to Borough Market · 15 min</div></div>
+
+    <div class="stop food" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">1:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Lunch</div>
+        <h3>Borough Market / Arabica</h3>
+        <div class="address">3 Rochester Walk, London SE1 9AF · ☎ +44 20 3011 5151</div>
+        <div class="desc">Grab street food from the stalls (falafel wraps, fresh pastries) or sit down at Arabica Bar & Kitchen for Eastern Mediterranean cuisine. Market open 10AM–5PM. Rating: 4.4★ (2,153 reviews).</div>
+        <div class="tags"><span class="tag">Street food</span><span class="tag">Eastern Mediterranean</span><span class="tag">$$</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk along South Bank · 20 min · Street performers, book stalls, river views</div></div>
+
+    <div class="stop activity" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">2:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🎡 Attraction</div>
+        <h3>London Eye</h3>
+        <div class="address">Riverside Bldg, County Hall, Westminster Bridge Rd, SE1 7PB</div>
+        <div class="desc">~30 min ride with incredible 360° views. Book fast-track to skip the queue with little ones. Kids under 2 free. ~£29–35/adult. Open 11AM–6PM weekdays.</div>
+        <div class="tags">
+          <span class="tag book">⚠️ Book 2:30 PM fast-track slot</span>
+          <span class="tag">~£35/adult</span>
+          <span class="tag free">Under 2 free</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Waterloo → Gloucester Rd · ~20 min · Nap time in stroller on the Tube</div></div>
+
+    <div class="stop rest" style="animation-delay:0.55s">
+      <div class="time-badge"><span class="t-hr">3:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Rest</div>
+        <h3>Back to Airbnb — Nap Time</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Let the kids nap and recharge. George (1yr) is probably already out in the stroller. Freshen up before dinner.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Piccadilly Line · Gloucester Rd → Southwark · 18 min</div></div>
+
+    <div class="stop food" style="animation-delay:0.6s">
+      <div class="time-badge"><span class="t-hr">6:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Dinner — Ashley's Pick</div>
+        <h3>Bala Baya ⭐</h3>
+        <div class="address">Arch 25, Old Union Yard Arches, 229 Union St, London SE1 0LR · ☎ +44 20 8001 7015</div>
+        <div class="desc">THE Middle Eastern night. Vibrant, lively restaurant celebrating Tunisian and Syrian heritage. Incredible cocktails, sharing plates, and Eastern Med flavors. Family-friendly with highchairs. Rating: 4.6★ (3,487 reviews). Reservation #8FU2EJ4LKYSY.</div>
+        <div class="tags">
+          <span class="tag" style="background:rgba(90,184,122,0.1);color:var(--green);">✓ Reserved 6:00 PM · 4 guests</span>
+          <span class="tag">Middle Eastern</span>
+          <span class="tag">$$</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Southwark → Gloucester Rd · ~20 min</div></div>
+
+    <div class="stop rest" style="animation-delay:0.7s">
+      <div class="time-badge"><span class="t-hr">7:15</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Wind Down</div>
+        <h3>Back to Airbnb — Kids Bedtime</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Bath, books, bed. What a day!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 2 Booking Status</h4>
+    <ul>
+      <li>Changing of the Guard · 11 AM <span class="status booked">✓ Free · No booking</span></li>
+      <li>Borough Market <span class="status booked">✓ Free · No booking</span></li>
+      <li>London Eye · 2:30 PM fast-track <span class="status todo">Book Now</span></li>
+      <li>Bala Baya · 6:00 PM · 4 guests <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19d0d75d637c992b" target="_blank">📄 View</a> <span class="status booked">✓ Booked</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 3 ========== -->
+<div class="day-section" id="day3">
+  <div class="day-header">
+    <div class="day-tag">🦕 Day 3 — Thursday, April 16</div>
+    <h2>Museums, Parks & Dim Sum</h2>
+    <div class="day-summary">Portobello Road, Natural History Museum dinosaurs, Diana Memorial Playground pirate ship, then trendy Cantonese at Dim Sum Library.</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m36!1m12!1m3!1d19870.0!2d-0.17!3d51.50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m21!3e2!4m5!1s0x48761246d8da1566%3A0x6634aff4f5b49cd3!2sPortobello+Road+Market!3m2!1d51.517!2d-0.2058!4m5!1s0x48760542464fc79e%3A0x7be9e2b7a6b2b67b!2sNatural+History+Museum!3m2!1d51.4967!2d-0.1764!4m5!1s0x48760ff07b9e7ffd%3A0xe6a0a13bbb0ce112!2sDiana+Memorial+Playground!3m2!1d51.5087!2d-0.1878!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Portobello+Road+Market/Natural+History+Museum,+London/Diana+Memorial+Playground,+London/Emperor's+Gate,+London+SW7/Dim+Sum+Library,+136+Long+Acre,+London+WC2E+9AD" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Portobello+Road+Market/Natural+History+Museum,+London/Diana+Memorial+Playground,+London/Emperor's+Gate,+London+SW7/Dim+Sum+Library,+136+Long+Acre,+London+WC2E+9AD" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 3 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → Portobello → NHM → Diana Playground → Airbnb → Dim Sum Library</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop rest" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">9:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">☕ Morning</div>
+        <h3>Breakfast at Airbnb + Head Out</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Feed the troops, pack snacks and the stroller. Today is a packed but walkable day.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Circle Line · Gloucester Rd → Notting Hill Gate · 8 min + 5 min walk</div></div>
+
+    <div class="stop activity" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">9:45</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🛍️ Market</div>
+        <h3>Portobello Road Market</h3>
+        <div class="address">Portobello Road, London W11 1LJ</div>
+        <div class="desc">Thursday is quieter than Saturday but still has antique stalls and food vendors. Grab a coffee from one of the market cafés. The kids will love the colorful pastel houses. Rating: 4.5★.</div>
+        <div class="tags"><span class="tag free">Free · No booking</span><span class="tag tip">Thu = less crowded</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Circle Line · Notting Hill Gate → South Kensington · 6 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">11:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🦕 Must-Do</div>
+        <h3>Natural History Museum</h3>
+        <div class="address">Cromwell Rd, South Kensington, London SW7 5BD · 8 min walk from Airbnb!</div>
+        <div class="desc">FREE entry! The dinosaur gallery is an absolute must. The blue whale skeleton in Hintze Hall is jaw-dropping. Allow ~2 hours. Open 10AM–5:50PM. Rating: 4.6★.</div>
+        <div class="tags">
+          <span class="tag free">Free entry!</span>
+          <span class="tag">Dinosaurs 🦖</span>
+          <span class="tag tip">Book free timed ticket online to skip queue</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk through Hyde Park · 20 min · Beautiful path through Kensington Gardens</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">1:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">👧 Kids' Highlight</div>
+        <h3>Diana Memorial Playground</h3>
+        <div class="address">Kensington Gardens, Broad Walk, London W2 4RU</div>
+        <div class="desc">Giant wooden pirate ship, teepees, sensory trails, sand areas. Nora (3) will go wild. George (1) can explore the sensory areas. Gated and safe with toilets. Rating: 4.7★. Café right next to it for lunch/snacks.</div>
+        <div class="tags">
+          <span class="tag free">Free · No booking</span>
+          <span class="tag">Pirate Ship 🏴‍☠️</span>
+          <span class="tag tip">Grab lunch at the playground café</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk back through Kensington Gardens · Peter Pan statue → Round Pond → 25 min to Airbnb</div></div>
+
+    <div class="stop rest" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">3:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Rest</div>
+        <h3>Back to Airbnb — Nap Time</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Recharge before dinner. Let the kids sleep and adults rest.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Piccadilly Line · Gloucester Rd → Covent Garden · 15 min direct</div></div>
+
+    <div class="stop food" style="animation-delay:0.6s">
+      <div class="time-badge"><span class="t-hr">5:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Dinner</div>
+        <h3>Dim Sum Library 🥟</h3>
+        <div class="address">136 Long Acre, London WC2E 9AD · ☎ +44 20 3953 6820</div>
+        <div class="desc">Sleek, modern Cantonese in Covent Garden. Wagyu beef puff, dan dan xiao long bao, black truffle crispy chicken. Hong Kong glamour meets London trendy. Rating: 4.7★ (747 reviews).</div>
+        <div class="tags">
+          <span class="tag book">⚠️ Reserve for 5:30 PM via OpenTable</span>
+          <span class="tag">Cantonese</span>
+          <span class="tag">$$$</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Piccadilly Line · Covent Garden → Gloucester Rd · 15 min</div></div>
+
+    <div class="stop rest" style="animation-delay:0.7s">
+      <div class="time-badge"><span class="t-hr">7:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Wind Down</div>
+        <h3>Back to Airbnb — Last Night in London</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Pack tonight! Check-out by 11 AM tomorrow. Train leaves at 1:33 PM from Euston.</div>
+        <div class="tags"><span class="tag tip">Pack tonight — busy morning tomorrow</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 3 Booking Status</h4>
+    <ul>
+      <li>Portobello Road Market <span class="status booked">✓ Free · No booking</span></li>
+      <li>Natural History Museum <span class="status booked">✓ Free · Book timed entry online</span></li>
+      <li>Diana Memorial Playground <span class="status booked">✓ Free · No booking</span></li>
+      <li>Dim Sum Library · 5:30 PM <span class="status todo">Book Now</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 4 ========== -->
+<div class="day-section" id="day4">
+  <div class="day-header">
+    <div class="day-tag">🚂 Day 4 — Friday, April 17</div>
+    <h2>Tower Bridge & Train to Manchester</h2>
+    <div class="day-summary">Quick Tower Bridge morning, then pack up and catch the 1:33 PM Avanti West Coast to Manchester. Check into Northern Quarter Airbnb.</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d39740.0!2d-0.12!3d51.51!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x48760349331eb4c9%3A0x9eac68487cf95d29!2sTower+Bridge!3m2!1d51.5054564!2d-0.0753565!4m5!1s0x48761b2548fbc21d%3A0xa5c09a42f23b0e37!2sLondon+Euston!3m2!1d51.5280408!2d-0.1333271!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Tower+Bridge,+London/Emperor's+Gate,+London+SW7/London+Euston+station/Manchester+Piccadilly+station/Oldham+St,+Manchester+M1+1JQ" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Tower+Bridge,+London/Emperor's+Gate,+London+SW7/London+Euston+station/Manchester+Piccadilly+station/Oldham+St,+Manchester+M1+1JQ" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 4 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → Tower Bridge → Pack up → Euston → Manchester Piccadilly → NQ Airbnb</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop rest" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">8:30</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">☕ Morning</div>
+        <h3>Breakfast & Partial Pack</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Quick breakfast. Get most bags packed so you can head straight to Tower Bridge and back.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 District Line · Gloucester Rd → Tower Hill · 25 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">9:15</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">📸 Sightseeing</div>
+        <h3>Tower Bridge</h3>
+        <div class="address">Tower Bridge Rd, London SE1 2UP</div>
+        <div class="desc">Iconic London photos! Walk across the bridge. If you have time and energy, peek at the Tower of London from outside (kids under 5 free if you want to go in). Rating: 4.8★.</div>
+        <div class="tags"><span class="tag free">Free to walk across</span><span class="tag">Tower of London visible</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 District Line · Tower Hill → Gloucester Rd · 25 min</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">10:30</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🧳 Check Out</div>
+        <h3>Airbnb Check-Out</h3>
+        <div class="address">Emperor's Gate, SW7 4HJ</div>
+        <div class="desc">Check out by 11:00 AM. Final pack, double-check for kids' things. Grab a coffee and snack for the train.</div>
+        <div class="tags"><span class="tag tip">Check-out by 11 AM</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Piccadilly Line · Gloucester Rd → King's Cross St Pancras · 18 min (Euston = 5 min walk)</div></div>
+
+    <div class="stop transport" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">12:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🚂 Transit</div>
+        <h3>London Euston Station</h3>
+        <div class="address">Euston Rd, London NW1 2RT</div>
+        <div class="desc">Arrive 1 hour early. Grab lunch at the station (Leon, M&S Food, Wasabi). Platform won't be announced until ~15 min before departure — watch the boards! Booking ref: 20529248.</div>
+        <div class="tags"><span class="tag">Standard Premium · Coach H · Seats 30 & 33</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚂 Avanti West Coast · 2h 11min · WiFi + power sockets · £161 total</div></div>
+
+    <div class="stop transport" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">1:33</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🚂 Departure</div>
+        <h3>Train Departs London Euston → Manchester</h3>
+        <div class="address">London Euston → Manchester Piccadilly</div>
+        <div class="desc">Departs 1:33 PM, arrives 3:44 PM. Standard Premium with table seats, window & forward facing. Kids will hopefully nap!</div>
+        <div class="tags"><span class="tag">Ref: 20529248</span><span class="tag">E-tickets in email</span></div>
+      </div>
+    </div>
+
+    <div class="stop transport" style="animation-delay:0.55s">
+      <div class="time-badge"><span class="t-hr">3:44</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🚂 Arrival</div>
+        <h3>Manchester Piccadilly Station</h3>
+        <div class="address">Manchester M1</div>
+        <div class="desc">Welcome to Manchester! The Northern Quarter is a 10-minute walk from Piccadilly. Grab a taxi/Uber if you have heavy bags.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk or 🚗 Uber · 10 min to Airbnb</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.6s">
+      <div class="time-badge"><span class="t-hr">4:15</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🏠 Accommodation</div>
+        <h3>Manchester Airbnb — Check In</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ · Northern Quarter</div>
+        <div class="desc">Heart of the Northern Quarter by Rest&Recharge. Check-in after 4 PM. Host: Tom. Settle in, explore the neighborhood.</div>
+        <div class="tags"><span class="tag">Confirmation: HMDRMCZZYW</span><span class="tag">$853.07 total</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 5 min on Thomas Street</div></div>
+
+    <div class="stop food" style="animation-delay:0.7s">
+      <div class="time-badge"><span class="t-hr">5:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Dinner</div>
+        <h3>Mackie Mayor Food Hall</h3>
+        <div class="address">Smithfield Market Hall, 1 Eagle St, Manchester M4 5BU</div>
+        <div class="desc">Stunning restored Victorian market hall turned food court. Multiple kitchens — burgers, seafood, pizza, Asian, desserts. Order from your phone. Perfect for a family where everyone wants something different. Rating: 4.5★.</div>
+        <div class="tags"><span class="tag free">No booking needed</span><span class="tag">Food hall</span><span class="tag">$$</span></div>
+      </div>
+    </div>
+
+    <div class="stop rest" style="animation-delay:0.8s">
+      <div class="time-badge"><span class="t-hr">7:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Wind Down</div>
+        <h3>Back to Airbnb</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Settle into Manchester. Kids to bed. Explore the Northern Quarter street art from your window!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 4 Booking Status</h4>
+    <ul>
+      <li>Avanti West Coast Train · 1:33 PM <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19d0d2cd17a0b5eb" target="_blank">📄 View</a> <span class="status booked">✓ Booked · Ref 20529248</span></li>
+      <li>Manchester Airbnb <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19b181e69c8d3e67" target="_blank">📄 View</a> <span class="status booked">✓ Booked · HMDRMCZZYW</span></li>
+      <li>Mackie Mayor <span class="status booked">✓ No booking needed</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 5 ========== -->
+<div class="day-section" id="day5">
+  <div class="day-header">
+    <div class="day-tag">⚽ Day 5 — Saturday, April 18</div>
+    <h2>Manchester Exploring & Race Prep</h2>
+    <div class="day-summary">John Rylands Library, Manchester Cathedral, National Football Museum, afternoon rest & race prep, then carb-loading dinner at Tampopo (Pan-Asian fried rice & noodles).</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m36!1m12!1m3!1d4736.0!2d-2.24!3d53.48!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m21!3e2!4m5!1s0x487bb7c302160bd1%3A0x8ecd78619c05b25c!2sJohn+Rylands+Library!3m2!1d53.4803024!2d-2.2487141!4m5!1s0x487bb7c68e6a02bf%3A0x4098bd963dcf0f20!2sManchester+Cathedral!3m2!1d53.4851459!2d-2.2443156!4m5!1s0x487bb7a9dfdf27df%3A0xe671501557bf8ed3!2sNational+Football+Museum!3m2!1d53.4859298!2d-2.2421548!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/John+Rylands+Library,+Manchester/Manchester+Cathedral/National+Football+Museum,+Manchester/Rudy's+Pizza+Napoletana+Ancoats,+Manchester/Oldham+St,+Manchester+M1+1JQ" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/John+Rylands+Library,+Manchester/Manchester+Cathedral/National+Football+Museum,+Manchester/Rudy's+Pizza+Napoletana+Ancoats,+Manchester/Oldham+St,+Manchester+M1+1JQ" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 5 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → John Rylands → Cathedral → Football Museum → Rudy's Pizza → Airbnb</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop rest" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">9:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">☕ Morning</div>
+        <h3>Breakfast at Takk Coffee</h3>
+        <div class="address">Tariff St, Northern Quarter</div>
+        <div class="desc">Brilliant Nordic-inspired coffee shop right in the NQ. Single origin coffees brewed by hand. Grab pastries and fuel up for the day.</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 15 min through city centre</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">10:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">📚 Culture</div>
+        <h3>John Rylands Library</h3>
+        <div class="address">150 Deansgate, Manchester M3 3EH · ☎ +44 161 306 0555</div>
+        <div class="desc">Absolutely stunning Gothic library — like stepping into Hogwarts. Free entry. Historic books dating back centuries. Quick 30–45 min visit. Open Thu–Sat 10AM–5PM. Rating: 4.8★.</div>
+        <div class="tags"><span class="tag free">Free entry</span><span class="tag">Hogwarts vibes 🏰</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 8 min north on Deansgate</div></div>
+
+    <div class="stop activity" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">11:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">⛪ Culture</div>
+        <h3>Manchester Cathedral</h3>
+        <div class="address">Victoria St, Manchester M3 1SX</div>
+        <div class="desc">Beautiful medieval cathedral with stunning stained glass. Quick 20–30 min visit. Free entry. Calm, peaceful break from the city bustle. Rating: 4.7★.</div>
+        <div class="tags"><span class="tag free">Free entry</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 3 min across the square</div></div>
+
+    <div class="stop activity" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">11:45</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">⚽ Museum</div>
+        <h3>National Football Museum</h3>
+        <div class="address">Todd St, Manchester M4 3BG · ☎ +44 161 605 8200</div>
+        <div class="desc">Even non-football fans enjoy it. Interactive games on the top floor (penalty kicks!). Impressive memorabilia collection. 1–2 hours. Free entry. Rating: 4.3★.</div>
+        <div class="tags"><span class="tag free">Free entry</span><span class="tag">Interactive games</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 10 min back to NQ</div></div>
+
+    <div class="stop food" style="animation-delay:0.45s">
+      <div class="time-badge"><span class="t-hr">1:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍽️ Lunch</div>
+        <h3>Mackie Mayor (again!) or Northern Quarter Cafés</h3>
+        <div class="address">1 Eagle St, Manchester M4 5BU</div>
+        <div class="desc">So many options in the NQ — Mackie Mayor is open Sat 9AM–11PM. Or try Trof on Thomas Street for a proper British pub lunch (fish & chips, pies).</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk to Mayfield Park · 12 min south</div></div>
+
+    <div class="stop activity" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">2:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🌳 Park</div>
+        <h3>Mayfield Park</h3>
+        <div class="address">11 Baring St, Manchester M1 2PY</div>
+        <div class="desc">New park near Piccadilly with a huge climbing frame, slides, river, and green space. Perfect for the kids to burn energy. Snacks and ice cream available. Rating: 4.7★.</div>
+        <div class="tags"><span class="tag free">Free</span><span class="tag">Big climbing frame</span><span class="tag tip">Great for letting kids run</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk back to NQ · 10 min</div></div>
+
+    <div class="stop rest" style="animation-delay:0.55s">
+      <div class="time-badge"><span class="t-hr">4:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Rest</div>
+        <h3>Airbnb — Nap / Chill</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Nap time for the kids. Rest up before pizza night!</div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk · 8 min to Ancoats</div></div>
+
+    <div class="stop food" style="animation-delay:0.6s">
+      <div class="time-badge"><span class="t-hr">5:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍚 Pre-Race Dinner</div>
+        <h3>Tampopo — Albert Square</h3>
+        <div class="address">16 Albert Square, Manchester M2 5PF · ☎ +44 161 819 1966</div>
+        <div class="desc">Pan-Asian street food — perfect for marathon carb-loading! Egg fried rice, pad Thai, noodle bowls, and Thai/Malaysian curries. Light on the stomach, heavy on the carbs. 28 years in Manchester, rated No.1 Pad Thai in the city. Easy on the gut for race morning.</div>
+        <div class="tags">
+          <span class="tag book">⚠️ Book ahead — popular on Saturdays</span>
+          <span class="tag">Pan-Asian 🍜</span>
+          <span class="tag tip">Carb-loading night!</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stop rest" style="animation-delay:0.7s">
+      <div class="time-badge"><span class="t-hr">7:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Early Night</div>
+        <h3>Back to Airbnb — Race Prep</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Lay out race gear, pin bib, charge watch, pack gels. Early to bed — 9:10 AM start tomorrow! Set alarm for 6:30 AM. Marathon ref: GHG72962161.</div>
+        <div class="tags"><span class="tag tip">Lay out kit tonight · Alarm 6:30 AM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 5 Booking Status</h4>
+    <ul>
+      <li>John Rylands Library <span class="status booked">✓ Free · No booking</span></li>
+      <li>Manchester Cathedral <span class="status booked">✓ Free · No booking</span></li>
+      <li>National Football Museum <span class="status booked">✓ Free · No booking</span></li>
+      <li>Mayfield Park <span class="status booked">✓ Free · No booking</span></li>
+      <li>Tampopo dinner (carb-loading) <span class="status todo">Book Ahead</span></li>
+      <li>Manchester Marathon · 9:10 AM start <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/1967c4c1d0654ef9" target="_blank">📄 View</a> <span class="status booked">✓ Registered · GHG72962161</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 6 ========== -->
+<div class="day-section" id="day6">
+  <div class="day-header">
+    <div class="day-tag">🏃 Day 6 — Sunday, April 19</div>
+    <h2>MARATHON DAY + Arsenal vs Man City</h2>
+    <div class="day-summary">George runs the Manchester Marathon (9:10 AM start). Family watches from Deansgate at mile 5 with breakfast at Eggslut. Meet at finish line on Oxford Road. Arsenal vs Man City at 4:30 PM. Celebration steak & lobster at Hawksmoor.</div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/Old+Trafford,+Manchester/Eggslut,+Deansgate,+Manchester/Oxford+Road,+Manchester/Hawksmoor+Manchester,+184+Deansgate,+Manchester" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 6 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → Old Trafford (race start) → Eggslut Deansgate (family) → Oxford Rd finish → Hawksmoor</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop highlight" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">6:30</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">⏰ Race Morning</div>
+        <h3>Wake Up & Race Prep</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Light breakfast — toast, banana, coffee. Gear up, pin bib. George heads out by 7:15 AM to get to Old Trafford. Ashley and kids can sleep in.</div>
+        <div class="tags"><span class="tag tip">Light breakfast: toast + banana + coffee</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 George: Tram from Piccadilly → Old Trafford · ~20 min (arrive by 8:00 AM)</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">8:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🏃 Race Start Area</div>
+        <h3>George → Old Trafford Start Line</h3>
+        <div class="address">Bridgewater Way, near Old Trafford Stadium</div>
+        <div class="desc">George arrives at the start area. Waves start from 9:00 AM (elites) through 11:10 AM. Your wave starts at 9:10 AM. Booking ref: GHG72962161. Use the predictive tracker app so Ashley can follow your progress live.</div>
+        <div class="tags"><span class="tag">Wave start: 9:10 AM</span><span class="tag">Ref: GHG72962161</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">👨‍👩‍👧‍👦 Ashley & kids: Tram from Piccadilly → Deansgate · ~10 min (leave ~8:45 AM)</div></div>
+
+    <div class="stop food" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">9:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🍳 Family Breakfast ON THE COURSE</div>
+        <h3>Eggslut — Deansgate (Mile 5 Turnaround)</h3>
+        <div class="address">Centurion House, Deansgate, Manchester</div>
+        <div class="desc">Brand new on Deansgate (opened Feb 2026). Egg sandwiches, truffle hash browns, French toast sticks — kids will love it. It's RIGHT on the marathon route at the mile 5 turnaround point where there's a giant screen, DJs, and a massive crowd. Ashley — grab breakfast, then step outside to watch George fly past around 9:50-10:00 AM!</div>
+        <div class="tags">
+          <span class="tag">On the marathon route!</span>
+          <span class="tag tip">George passes ~9:50-10:00 AM</span>
+          <span class="tag">Kid-friendly</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🏃 George running! · Use Manchester Marathon tracker app for live location</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.35s">
+      <div class="time-badge"><span class="t-hr">9:50</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">📣 Watch George Run!</div>
+        <h3>Deansgate Turnaround — Mile 5 Cheer Zone</h3>
+        <div class="address">Deansgate, Manchester (near Peter Street junction)</div>
+        <div class="desc">This is the #1 spectator spot! Giant Buzzin' Fly-by screen, DJs, cheer teams, and huge crowd energy. George will pass through here around 9:50-10:00 AM. Sign up for SMS alerts when he's 2 miles from the finish.</div>
+        <div class="tags"><span class="tag free">Free · No booking</span><span class="tag tip">Sign up for finish line SMS alerts!</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">👨‍👩‍👧‍👦 Ashley: Tram Deansgate → Oxford Road · ~10 min (head over around 12:00 PM)</div></div>
+
+    <div class="stop highlight" style="animation-delay:0.4s">
+      <div class="time-badge"><span class="t-hr">12:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🏁 Finish Line!</div>
+        <h3>Meet George at Oxford Road Finish</h3>
+        <div class="address">Oxford Road, University of Manchester area</div>
+        <div class="desc">The finish line is on Oxford Road outside the University of Manchester. George — you've done it! 26.2 miles! Grab your medal, finisher tee, and find your family. Ashley will get a 2-mile-out SMS alert. Expect finish around 12:30-1:30 PM depending on pace.</div>
+        <div class="tags"><span class="tag">🏅 Finisher medal!</span><span class="tag tip">Family reunion spot — check marathon app</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚇 Tram or Uber back to NQ Airbnb · 15 min</div></div>
+
+    <div class="stop rest" style="animation-delay:0.5s">
+      <div class="time-badge"><span class="t-hr">2:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Recovery</div>
+        <h3>Back to Airbnb — Rest, Shower, Celebrate</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Shower off 26.2 miles. Stretch. Ice those legs. Kids nap. Get ready for a big evening!</div>
+      </div>
+    </div>
+
+    <div class="stop highlight" style="animation-delay:0.55s">
+      <div class="time-badge"><span class="t-hr">4:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">⚽ Arsenal vs Man City</div>
+        <h3>Manchester City vs Arsenal — Premier League</h3>
+        <div class="address">Etihad Stadium (if you have tickets) or NQ pub</div>
+        <div class="desc">The biggest game of the season! Arsenal lead Man City by 5 points — this could decide the title. Kick-off 4:30 PM, live on Sky Sports. Watch at a Northern Quarter pub (Trof, Cane & Grain, or any pub with screens) or if you can get tickets to the Etihad, it's a 15-min tram ride from Piccadilly.</div>
+        <div class="tags"><span class="tag">4:30 PM kick-off</span><span class="tag">Sky Sports</span><span class="tag tip">Title decider! 🏆</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚶 Walk or Uber to Deansgate · 10 min</div></div>
+
+    <div class="stop food" style="animation-delay:0.6s">
+      <div class="time-badge"><span class="t-hr">6:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">🥩 Marathon Celebration Dinner</div>
+        <h3>Hawksmoor Manchester — Steak & Lobster</h3>
+        <div class="address">184-186 Deansgate, Manchester M3 3WB · ☎ +44 161 836 6980</div>
+        <div class="desc">Manchester's most acclaimed steakhouse, in a stunning late-Victorian courthouse. Dry-aged British steak grilled over live charcoal, sustainable lobster, and legendary triple-cooked chips. You just ran a marathon — you deserve this. 4.5★ with 11,500+ reviews. Book the Chateaubriand to share!</div>
+        <div class="tags">
+          <span class="tag book">⚠️ Reserve for 6:30 PM</span>
+          <span class="tag">Steak & Lobster 🦞</span>
+          <span class="tag">$$$</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stop rest" style="animation-delay:0.7s">
+      <div class="time-badge"><span class="t-hr">8:30</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">😴 Last Night</div>
+        <h3>Back to Airbnb — Pack & Sleep</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Finish packing. Flight tomorrow at 1 PM from Manchester Airport. Need to be at the airport by ~10:30 AM. What a day — marathon finisher, the match, and Hawksmoor!</div>
+        <div class="tags"><span class="tag tip">Flight MAN→MCO tomorrow at 13:00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 6 Booking Status</h4>
+    <ul>
+      <li>Manchester Marathon · 9:10 AM start <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/1967c4c1d0654ef9" target="_blank">📄 View</a> <span class="status booked">✓ Registered · GHG72962161</span></li>
+      <li>Eggslut (family breakfast) <span class="status booked">✓ Walk-in · No booking</span></li>
+      <li>Arsenal vs Man City · 4:30 PM <span class="status todo">Find a pub or get tickets</span></li>
+      <li>Hawksmoor Manchester · 6:30 PM <span class="status todo">Book Now</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========== DAY 7 ========== -->
+<div class="day-section" id="day7">
+  <div class="day-header">
+    <div class="day-tag">✈️ Day 7 — Monday, April 20</div>
+    <h2>Departure — Manchester to Orlando</h2>
+    <div class="day-summary">Check out, head to Manchester Airport, fly home Upper Class on Virgin Atlantic.</div>
+  </div>
+
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d38000.0!2d-2.28!3d53.42!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e0!4m5!1s0x487bb7b4c5910001%3A0x3c4b3fbfd8aebbc9!2sOldham+St%2C+Manchester!3m2!1d53.4831233!2d-2.2348939!4m5!1s0x487a4d4c5e66a785%3A0xaa2e94eed4e1f11!2sManchester+Airport!3m2!1d53.3536751!2d-2.2750728!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div class="map-overlay">
+      <a href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/Manchester+Airport" target="_blank">📍 Open in Google Maps</a>
+    </div>
+  </div>
+
+  <a class="gmaps-banner" href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/Manchester+Airport" target="_blank">
+    <span class="icon">🗺️</span>
+    <div>
+      <div class="label">Open Day 7 Route in Google Maps</div>
+      <div class="sublabel">Airbnb → Manchester Airport (MAN)</div>
+    </div>
+  </a>
+
+  <div class="timeline">
+    <div class="stop rest" style="animation-delay:0.1s">
+      <div class="time-badge"><span class="t-hr">8:00</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">☕ Morning</div>
+        <h3>Breakfast & Final Pack</h3>
+        <div class="address">Oldham St, Manchester M1 1JQ</div>
+        <div class="desc">Quick breakfast. Double-check everything. Check out by 10:00 AM.</div>
+        <div class="tags"><span class="tag tip">Check-out by 10 AM</span></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="connector-inner">🚗 Uber or taxi · ~30 min to Manchester Airport (or train from Piccadilly · ~20 min)</div></div>
+
+    <div class="stop transport" style="animation-delay:0.2s">
+      <div class="time-badge"><span class="t-hr">10:30</span><span class="t-ampm">AM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">✈️ Airport</div>
+        <h3>Manchester Airport (MAN)</h3>
+        <div class="address">Manchester M90 1QX</div>
+        <div class="desc">Arrive 2.5 hours before departure for international flight with kids. Virgin Atlantic Upper Class — enjoy the Clubhouse lounge! Booking ref: GYRFI7.</div>
+        <div class="tags"><span class="tag">Virgin Atlantic VS75</span><span class="tag">Upper Class ✨</span></div>
+      </div>
+    </div>
+
+    <div class="stop highlight" style="animation-delay:0.3s">
+      <div class="time-badge"><span class="t-hr">1:00</span><span class="t-ampm">PM</span></div>
+      <div class="stop-card">
+        <div class="stop-type">✈️ Departure</div>
+        <h3>Flight VS75 — Manchester → Orlando</h3>
+        <div class="address">MAN → MCO · Upper Class</div>
+        <div class="desc">Departs 13:00, arrives 17:00 MCO. Upper Class with lie-flat seats — the kids can spread out! 87,000 Virgin Points + £1,466.31 (adults). Safe travels home!</div>
+        <div class="tags"><span class="tag">Ref: GYRFI7</span><span class="tag">Upper Class</span><span class="tag">Arrive 5 PM Orlando</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="booking-card">
+    <h4>📋 Day 7 Booking Status</h4>
+    <ul>
+      <li>Manchester Airbnb check-out by 10 AM <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/19b181e69c8d3e67" target="_blank">📄 View</a> <span class="status booked">✓ Booked</span></li>
+      <li>Virgin Atlantic VS75 · MAN→MCO · 1 PM <a class="view-booking" href="https://mail.google.com/mail/u/0/#all/199cf75778e5e810" target="_blank">📄 View</a> <span class="status booked">✓ Booked · GYRFI7</span></li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>Williamson Family UK Adventure · April 14–20, 2026 · Built with love ❤️</p>
+  <p style="margin-top:8px; font-size:11px; color:#555;">Click "Open in Google Maps" on any day for turn-by-turn navigation on your phone</p>
+</div>
+
+<script>
+function showDay(n) {
+  document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('day'+n).classList.add('active');
+  document.querySelectorAll('.day-btn')[n-1].classList.add('active');
+  window.scrollTo({top: document.getElementById('dayNav').offsetTop - 10, behavior: 'smooth'});
+  currentDay = n;
+}
+
+// Track current day for swipe
+let currentDay = 1;
+const totalDays = 7;
+
+// Swipe navigation between days
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 80) {
+    if (diff > 0 && currentDay < totalDays) showDay(currentDay + 1);
+    else if (diff < 0 && currentDay > 1) showDay(currentDay - 1);
+  }
+}, {passive: true});
+
+// Register Service Worker for offline + PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(err => console.log('SW registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
