@@ -1,10 +1,17 @@
-const CACHE_NAME = 'uk-trip-v1';
+const CACHE_NAME = 'uk-trip-v3';
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icon-192.png',
-  '/icon-512.png'
+  '/icon-512.png',
+  '/bookings/avianca.html',
+  '/bookings/virgin.html',
+  '/bookings/london-airbnb.html',
+  '/bookings/manchester-airbnb.html',
+  '/bookings/avanti-train.html',
+  '/bookings/bala-baya.html',
+  '/bookings/marathon.html'
 ];
 
 self.addEventListener('install', event => {
@@ -25,16 +32,14 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(cached => cached || fetch(event.request)
-        .then(response => {
-          if (response.ok && event.request.method === 'GET') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
-        })
-      )
-      .catch(() => caches.match('/index.html'))
+    fetch(event.request)
+      .then(response => {
+        if (response.ok && event.request.method === 'GET') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request).then(cached => cached || caches.match('/index.html')))
   );
 });
