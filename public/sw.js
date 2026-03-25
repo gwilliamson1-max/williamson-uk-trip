@@ -1,4 +1,4 @@
-const CACHE_NAME = 'uk-trip-v3';
+const CACHE_NAME = 'uk-trip-v4';
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
@@ -11,6 +11,7 @@ const URLS_TO_CACHE = [
   '/bookings/manchester-airbnb.html',
   '/bookings/avanti-train.html',
   '/bookings/bala-baya.html',
+  '/bookings/dim-sum-library.html',
   '/bookings/marathon.html'
 ];
 
