@@ -19,6 +19,8 @@
 <!-- Favicon -->
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -190,24 +192,46 @@ body {
 /* Map Container */
 .map-container {
   width: 100%;
-  height: 200px;
+  height: 220px;
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 24px;
   border: 1px solid var(--border);
   position: relative;
-  background: linear-gradient(135deg, #1a2d1a 0%, #1a1d27 40%, #1a2d3a 100%);
+  background: #1a1d27;
+}
+
+.map-container .leaflet-map {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.map-container .leaflet-control-attribution {
+  background: rgba(15,17,23,0.7) !important;
+  color: var(--text-dim) !important;
+  font-size: 9px !important;
+}
+.map-container .leaflet-control-attribution a { color: var(--text-dim) !important; }
+
+.map-marker {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  border: 2px solid #fff;
 }
-
-.map-container iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  filter: saturate(0.85) contrast(1.05);
+.map-marker span {
+  transform: rotate(45deg);
 }
 
 .map-overlay {
@@ -525,7 +549,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d40000.0!2d-0.32!3d51.48!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day1" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Heathrow+Airport,+Hounslow/Paddington+Station,+London/Emperor's+Gate,+South+Kensington,+London+SW7/The+Abingdon,+54+Abingdon+Rd,+London+W8+6AP" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -627,7 +651,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15000.0!2d-0.12!3d51.50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day2" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Buckingham+Palace,+London/Big+Ben,+London/Borough+Market,+London/London+Eye/Bala+Baya+Restaurant,+229+Union+St,+London+SE1+0LR" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -787,7 +811,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d12000.0!2d-0.19!3d51.505!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day3" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Portobello+Road+Market/Natural+History+Museum,+London/Diana+Memorial+Playground,+London/Emperor's+Gate,+London+SW7/Dim+Sum+Library,+136+Long+Acre,+London+WC2E+9AD" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -922,7 +946,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d10000.0!2d-0.175!3d51.50!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day4" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Emperor's+Gate,+London+SW7/Science+Museum,+Exhibition+Rd,+London/Emperor's+Gate,+London+SW7/London+Euston+station/Manchester+Piccadilly+station/Oldham+St,+Manchester+M1+1JQ" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -1070,7 +1094,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d5000.0!2d-2.245!3d53.483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day5" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/John+Rylands+Library,+Manchester/Manchester+Cathedral/National+Football+Museum,+Manchester/Rudy's+Pizza+Napoletana+Ancoats,+Manchester/Oldham+St,+Manchester+M1+1JQ" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -1222,7 +1246,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d8000.0!2d-2.27!3d53.46!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day6" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/Old+Trafford,+Manchester/Eggslut,+Deansgate,+Manchester/Oxford+Road,+Manchester/Hawksmoor+Manchester,+184+Deansgate,+Manchester" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -1376,7 +1400,7 @@ body {
   </div>
 
   <div class="map-container">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30000.0!2d-2.26!3d53.42!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1" allowfullscreen loading="lazy"></iframe>
+    <div id="map-day7" class="leaflet-map"></div>
     <div class="map-overlay">
       <a href="https://www.google.com/maps/dir/Oldham+St,+Manchester+M1+1JQ/Manchester+Airport" target="_blank">📍 Open in Google Maps</a>
     </div>
@@ -1444,6 +1468,107 @@ body {
 </div>
 
 <script>
+// ===== Leaflet Map Data =====
+const dayMapData = {
+  1: [
+    { label: 'A', name: 'Heathrow Airport', lat: 51.4700, lng: -0.4543 },
+    { label: 'B', name: 'Paddington Station', lat: 51.5154, lng: -0.1755 },
+    { label: 'C', name: 'Airbnb — Emperor\'s Gate', lat: 51.4945, lng: -0.1835 },
+    { label: 'D', name: 'The Abingdon', lat: 51.4976, lng: -0.1961 }
+  ],
+  2: [
+    { label: 'A', name: 'Airbnb — Emperor\'s Gate', lat: 51.4945, lng: -0.1835 },
+    { label: 'B', name: 'Buckingham Palace', lat: 51.5014, lng: -0.1419 },
+    { label: 'C', name: 'Big Ben', lat: 51.5007, lng: -0.1246 },
+    { label: 'D', name: 'Borough Market', lat: 51.5056, lng: -0.0905 },
+    { label: 'E', name: 'London Eye', lat: 51.5033, lng: -0.1195 },
+    { label: 'F', name: 'Bala Baya Restaurant', lat: 51.5033, lng: -0.1019 }
+  ],
+  3: [
+    { label: 'A', name: 'Airbnb — Emperor\'s Gate', lat: 51.4945, lng: -0.1835 },
+    { label: 'B', name: 'Portobello Road Market', lat: 51.5170, lng: -0.2058 },
+    { label: 'C', name: 'Natural History Museum', lat: 51.4967, lng: -0.1764 },
+    { label: 'D', name: 'Diana Memorial Playground', lat: 51.5087, lng: -0.1878 },
+    { label: 'E', name: 'Dim Sum Library', lat: 51.5128, lng: -0.1265 }
+  ],
+  4: [
+    { label: 'A', name: 'Airbnb — Emperor\'s Gate', lat: 51.4945, lng: -0.1835 },
+    { label: 'B', name: 'Science Museum', lat: 51.4978, lng: -0.1745 },
+    { label: 'C', name: 'London Euston', lat: 51.5280, lng: -0.1333 },
+    { label: 'D', name: 'Manchester Piccadilly', lat: 53.4774, lng: -2.2309 },
+    { label: 'E', name: 'Airbnb — Oldham St', lat: 53.4831, lng: -2.2349 }
+  ],
+  5: [
+    { label: 'A', name: 'Airbnb — Oldham St', lat: 53.4831, lng: -2.2349 },
+    { label: 'B', name: 'John Rylands Library', lat: 53.4803, lng: -2.2487 },
+    { label: 'C', name: 'Manchester Cathedral', lat: 53.4851, lng: -2.2443 },
+    { label: 'D', name: 'National Football Museum', lat: 53.4859, lng: -2.2422 },
+    { label: 'E', name: 'Rudy\'s Pizza Ancoats', lat: 53.4845, lng: -2.2275 }
+  ],
+  6: [
+    { label: 'A', name: 'Airbnb — Oldham St', lat: 53.4831, lng: -2.2349 },
+    { label: 'B', name: 'Old Trafford (Race Start)', lat: 53.4631, lng: -2.2913 },
+    { label: 'C', name: 'Eggslut Deansgate', lat: 53.4795, lng: -2.2490 },
+    { label: 'D', name: 'Oxford Rd (Finish Line)', lat: 53.4746, lng: -2.2424 },
+    { label: 'E', name: 'Hawksmoor Manchester', lat: 53.4795, lng: -2.2500 }
+  ],
+  7: [
+    { label: 'A', name: 'Airbnb — Oldham St', lat: 53.4831, lng: -2.2349 },
+    { label: 'B', name: 'Manchester Airport', lat: 53.3537, lng: -2.2751 }
+  ]
+};
+
+// ===== Map Instances =====
+const mapInstances = {};
+
+function createMarkerIcon(label) {
+  return L.divIcon({
+    className: '',
+    html: '<div class="map-marker"><span>' + label + '</span></div>',
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -30]
+  });
+}
+
+function initDayMap(dayNum) {
+  const containerId = 'map-day' + dayNum;
+  const el = document.getElementById(containerId);
+  if (!el || mapInstances[dayNum]) return;
+
+  const markers = dayMapData[dayNum];
+  if (!markers || markers.length === 0) return;
+
+  const map = L.map(containerId, {
+    zoomControl: false,
+    attributionControl: true,
+    scrollWheelZoom: false,
+    dragging: true,
+    tap: true
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  const bounds = L.latLngBounds();
+  markers.forEach(m => {
+    L.marker([m.lat, m.lng], { icon: createMarkerIcon(m.label) })
+      .bindPopup('<strong>' + m.label + '</strong> — ' + m.name)
+      .addTo(map);
+    bounds.extend([m.lat, m.lng]);
+  });
+
+  map.fitBounds(bounds, { padding: [30, 30] });
+  mapInstances[dayNum] = map;
+}
+
+// ===== Day Navigation =====
+let currentDay = 1;
+const totalDays = 7;
+
 function showDay(n) {
   document.querySelectorAll('.day-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
@@ -1451,11 +1576,16 @@ function showDay(n) {
   document.querySelectorAll('.day-btn')[n-1].classList.add('active');
   window.scrollTo({top: document.getElementById('dayNav').offsetTop - 10, behavior: 'smooth'});
   currentDay = n;
-}
 
-// Track current day for swipe
-let currentDay = 1;
-const totalDays = 7;
+  // Initialize or refresh map for this day
+  setTimeout(() => {
+    if (mapInstances[n]) {
+      mapInstances[n].invalidateSize();
+    } else {
+      initDayMap(n);
+    }
+  }, 50);
+}
 
 // Swipe navigation between days
 let touchStartX = 0;
@@ -1470,6 +1600,9 @@ document.addEventListener('touchend', e => {
     else if (diff < 0 && currentDay > 1) showDay(currentDay - 1);
   }
 }, {passive: true});
+
+// Initialize Day 1 map on load
+window.addEventListener('load', () => { initDayMap(1); });
 
 // Register Service Worker for offline + PWA
 if ('serviceWorker' in navigator) {
