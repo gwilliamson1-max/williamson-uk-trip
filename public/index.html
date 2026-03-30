@@ -1587,12 +1587,17 @@ function showDay(n) {
   }, 50);
 }
 
-// Swipe navigation between days
+// Swipe navigation between days (ignore touches on maps)
 let touchStartX = 0;
 let touchEndX = 0;
+let swipeOnMap = false;
 
-document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+document.addEventListener('touchstart', e => {
+  swipeOnMap = !!e.target.closest('.map-container');
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
 document.addEventListener('touchend', e => {
+  if (swipeOnMap) return;
   touchEndX = e.changedTouches[0].screenX;
   const diff = touchStartX - touchEndX;
   if (Math.abs(diff) > 80) {
